@@ -18,7 +18,8 @@ end
 class BinaryTree
     attr_reader :root
     def initialize(array)
-        @root = build_tree(array.sort.uniq)
+        @raw_data = array
+        @root = build_tree(@raw_data.sort.uniq)
     end
 
     def build_tree(array)
@@ -32,5 +33,29 @@ class BinaryTree
         parent.right_child = build_tree(right_children) if !right_children.empty?
         parent
     end
-end
 
+    def insert(value, node= @root)
+        if value > node.data
+            if !node.right_child 
+                return node.right_child = Node.new(value)
+            else
+                return insert(value, node.right_child)
+            end
+        end
+
+
+            
+        if value < node.data
+            if !node.left_child
+                return node.left_child= Node.new(value)
+            else
+                return insert(value, node.left_child)
+            end
+        end
+
+        if value == node.data
+            return "value already exists"
+        end
+
+    end
+end
