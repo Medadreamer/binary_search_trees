@@ -54,8 +54,44 @@ class BinaryTree
         end
 
         if value == node.data
-            return "value already exists"
+            return "Value already exists"
         end
 
     end
+
+    def find_closest(node)
+        !node.left_child ? node : find_closest(node.left_child)
+    end
+
+
+    def delete(value, node= @root, parent= nil)
+        if node.data == value
+            if !node.right_child && !node.left_child
+                parent.right_child = nil if parent && value > parent.data
+                parent.left_child = nil if parent && value < parent.data
+                @root = nil if !parent
+            elsif node.right_child && node.left_child
+                closest_node = find_closest(node.right_child)
+                delete(closest_node.data)
+                node.data = closest_node.data
+            elsif node.right_child
+                parent.right_child = node.right_child if parent && value > parent.data
+                parent.left_child = node.right_child if parent && value < parent.data
+                node.right_child = nil
+                @root = node.right_child if !parent
+            else
+                parent.right_child = node.left_child if parent && value > parent.data
+                parent.left_child = node.left_child if parent && value < parent.data
+                node.left_child = nil
+                @root = node.left_child if !parent
+            end
+
+        end
+
+        delete(value, node.right_child, node) if value > node.data && node.right_child
+        delete(value, node.left_child, node) if value < node.data && node.left_child
+    end
+
 end
+
+
