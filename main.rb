@@ -124,4 +124,29 @@ class BinaryTree
         block_given? ? ordered_data.select {|data| yield(data)} : ordered_data
     end
 
+    def preorder(node= @root, ordered_data= [])
+        ordered_data.push(node.data)
+        preorder(node.left_child, ordered_data) if node.left_child
+        preorder(node.right_child, ordered_data) if node.right_child
+
+        block_given? ? ordered_data.select {|data| yield(data)} : ordered_data
+    end
+
+    def inorder(node= @root, ordered_data= [])
+
+        inorder(node.left_child, ordered_data) if node.left_child
+        ordered_data.push(node.data)
+        inorder(node.right_child, ordered_data) if node.right_child
+
+        block_given? ? ordered_data.select {|data| yield(data)} : ordered_data
+    end
+
+    def postorder(node= @root, ordered_data= [])
+        postorder(node.left_child, ordered_data) if node.left_child
+        postorder(node.right_child, ordered_data) if node.right_child
+        ordered_data.push(node.data)
+
+        block_given? ? ordered_data.select {|data| yield(data)} : ordered_data
+    end
+
 end
