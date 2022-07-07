@@ -92,7 +92,7 @@ class BinaryTree
         delete(value, node.left_child, node) if value < node.data && node.left_child
     end
 
-    def find(value,node= @root)
+    def find(value, node= @root)
         node.data == value ? node :
         value > node.data && node.right_child ? find(value, node.right_child) : 
         value < node.data && node.left_child ? find(value, node.left_child) : return
@@ -150,6 +150,8 @@ class BinaryTree
     end
 
     def height(data, height= 0)
+        return "Not found" if find(data).nil?
+
         node = find(data)
         height += 1
 
@@ -160,6 +162,14 @@ class BinaryTree
         height = height(node.left_child.data, height) > height(node.right_child.data, height) ? height(node.left_child.data, height) : height(node.right_child.data, height)
     end
 
+    def depth(data, node= @root, depth= 0)
+        return "Not found" if find(data).nil?
+        depth += 1
+        node.data == data ? depth :
+        data > node.data && node.right_child ? depth(data, node.right_child, depth) : 
+        data < node.data && node.left_child ? depth(data, node.left_child, depth) : return
+    end
+
     def pretty_print(node = @root, prefix = '', is_left = true)
         pretty_print(node.right_child, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right_child
         puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -167,3 +177,8 @@ class BinaryTree
     end
 
 end
+
+tree = BinaryTree.new([50, 32, 70, 20, 36, 60, 80, 30, 34, 40, 65, 75, 85])
+tree.insert(31)
+tree.pretty_print
+p tree.height(37)
