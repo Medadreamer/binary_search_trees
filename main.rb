@@ -149,4 +149,21 @@ class BinaryTree
         block_given? ? ordered_data.select {|data| yield(data)} : ordered_data
     end
 
+    def height(data, height= 0)
+        node = find(data)
+        height += 1
+
+        return height if node.right_child.nil? && node.left_child.nil?
+        return height(node.left_child.data, height) if node.right_child.nil?
+        return height(node.right_child.data, height) if node.left_child.nil?
+       
+        height = height(node.left_child.data, height) > height(node.right_child.data, height) ? height(node.left_child.data, height) : height(node.right_child.data, height)
+    end
+
+    def pretty_print(node = @root, prefix = '', is_left = true)
+        pretty_print(node.right_child, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right_child
+        puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
+        pretty_print(node.left_child, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left_child
+    end
+
 end
