@@ -149,7 +149,7 @@ class BinaryTree
         block_given? ? ordered_data.select {|data| yield(data)} : ordered_data
     end
 
-    def height(data, height= 0)
+    def height(data, height= -1)
         return "Not found" if find(data).nil?
 
         node = find(data)
@@ -162,12 +162,33 @@ class BinaryTree
         height = height(node.left_child.data, height) > height(node.right_child.data, height) ? height(node.left_child.data, height) : height(node.right_child.data, height)
     end
 
-    def depth(data, node= @root, depth= 0)
+    def depth(data, node= @root, depth= -1)
         return "Not found" if find(data).nil?
         depth += 1
         node.data == data ? depth :
         data > node.data && node.right_child ? depth(data, node.right_child, depth) : 
         data < node.data && node.left_child ? depth(data, node.left_child, depth) : return
+    end
+
+    def balanced?
+        # gather all nodes with two children
+        nodes_array = self.inorder do |data| 
+            node = find(data)
+            node.right_child && node.left_child ? true : false    
+        end
+
+        #check the height diffrence for all parents
+        diff_checker = nodes_array.map do |node|
+            node = find(node)
+            (height(node.right_child.data) - height(node.left_child.data)).abs > 1
+        end
+
+        # return true if all diffs <= 1
+        diff_checker.all?{|diff| !diff}
+    end
+
+    def rebalance
+        @root = build_tree(self.inorder.sort)
     end
 
     def pretty_print(node = @root, prefix = '', is_left = true)
@@ -177,8 +198,3 @@ class BinaryTree
     end
 
 end
-
-tree = BinaryTree.new([50, 32, 70, 20, 36, 60, 80, 30, 34, 40, 65, 75, 85])
-tree.insert(31)
-tree.pretty_print
-p tree.height(37)
