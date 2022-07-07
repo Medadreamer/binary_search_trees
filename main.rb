@@ -92,6 +92,20 @@ class BinaryTree
         delete(value, node.left_child, node) if value < node.data && node.left_child
     end
 
+    def find(value,node= @root)
+        node.data == value ? node :
+        value > node.data && node.right_child ? find(value, node.right_child) : 
+        value < node.data && node.left_child ? find(value, node.left_child) : return
+    end
+    
+    def pretty_print(node = @root, prefix = '', is_left = true)
+        pretty_print(node.right_child, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right_child
+        puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
+        pretty_print(node.left_child, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left_child
+    end
 end
 
 
+tree = BinaryTree.new([50, 30, 20, 40, 32, 34, 36, 70, 60, 65, 80, 75, 85])
+
+p tree.find(22)
